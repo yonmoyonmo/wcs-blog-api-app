@@ -6,6 +6,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class JwtProperties {
     private String secretKey;
     private String expiration;
+    private String adminWonmo;
+
+    public String getAdminWonmo() {
+        return adminWonmo;
+    }
+
+    public void setAdminWonmo(String adminWonmo) {
+        this.adminWonmo = adminWonmo;
+    }
 
     public String getSecretKey() {
         return secretKey;

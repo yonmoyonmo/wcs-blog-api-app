@@ -19,11 +19,28 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<Post> posts = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+    private Admin admin;
+
     @Lob
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    //편의 메소드
+    public void setAdmin(Admin admin) {
+        if(this.admin != null){
+            this.admin.getCategories().remove(this);
+        }
+        this.admin = admin;
+        admin.getCategories().add(this);
+    }
 
     public Long getId() {
         return id;
