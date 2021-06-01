@@ -1,5 +1,7 @@
 package wonmocyberschool.wcsblogapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,18 +18,20 @@ public class Category {
     @Column(nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "category")
-    private List<Post> posts = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "admin_id")
-    private Admin admin;
-
     @Lob
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "category")
+    private List<Post> posts = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+    private Admin admin;
 
     public Admin getAdmin() {
         return admin;

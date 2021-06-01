@@ -1,5 +1,6 @@
 package wonmocyberschool.wcsblogapi.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,10 +10,17 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import wonmocyberschool.wcsblogapi.interceptor.AdminInterceptor;
 import wonmocyberschool.wcsblogapi.interceptor.JwtInterceptor;
+import wonmocyberschool.wcsblogapi.repository.AdminRepository;
 import wonmocyberschool.wcsblogapi.util.JwtUtil;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    private AdminRepository adminRepository;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -26,9 +34,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor())
                 .addPathPatterns("/api/**");
-        registry.addInterceptor(new AdminInterceptor())
+        registry.addInterceptor(new AdminInterceptor(jwtUtil, adminRepository))
                 .addPathPatterns("/admin/**")
-                .excludePathPatterns("/admin/test/oauth");
+                .excludePathPatterns("/admin/test/oauth", "/admin/wonmo/**");
     }
 
     @Bean

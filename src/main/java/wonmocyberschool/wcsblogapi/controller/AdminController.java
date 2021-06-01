@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import wonmocyberschool.wcsblogapi.config.JwtProperties;
 import wonmocyberschool.wcsblogapi.entity.Admin;
+import wonmocyberschool.wcsblogapi.entity.Category;
 import wonmocyberschool.wcsblogapi.payload.Response;
 import wonmocyberschool.wcsblogapi.payload.Wonmo;
 import wonmocyberschool.wcsblogapi.service.AdminService;
@@ -15,6 +16,9 @@ import wonmocyberschool.wcsblogapi.util.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -47,6 +51,7 @@ public class AdminController {
         return "WCS API server";
     }
 
+    //wonmo
     @PostMapping("/wonmo")
     public ResponseEntity<Response> addAdmin(@RequestBody Wonmo wonmo){
         Response response = new Response();
@@ -76,6 +81,46 @@ public class AdminController {
         }else{
             return new ResponseEntity<Response>(
                     new Response("Not OK",false, null), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //category
+    @PostMapping("/category")
+    public ResponseEntity<Response> addCategory(
+            HttpServletRequest request,
+            @RequestBody Category category){
+
+        Response response = new Response();
+        String token = request.getHeader("Authorization");
+        Map<String, Object> tokenResult = jwtUtil.getUserIdAndEmailFromToken(token);
+        String email = tokenResult.get("email").toString();
+        if(adminService.createCategory(email, category)){
+            response.setMessage("new category is created");
+            response.setSuccess(true);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }else{
+            response.setMessage("category creation failed");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/category/list")
+    public ResponseEntity<Response> getCategoryList(
+        HttpServletRequest request){
+
+        Response response = new Response();
+
+        List<Category> categories = adminService.readCategoryList();
+        if(categories.isEmpty()){
+            response.setMessage("there's no categories");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.NOT_FOUND);
+        }else{
+            response.setMessage("OK");
+            response.setSuccess(true);
+            response.setData(categories);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
 

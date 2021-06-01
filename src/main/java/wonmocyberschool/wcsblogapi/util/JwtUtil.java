@@ -11,6 +11,8 @@ import wonmocyberschool.wcsblogapi.entity.BlogUser;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
@@ -66,13 +68,15 @@ public class JwtUtil {
     }
 
 
-    public Long getUserIdFromToken(String token) {
+    public Map<String, Object> getUserIdAndEmailFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtProperties.getSecretKey())
                 .parseClaimsJws(token)
                 .getBody();
-
-        return Long.parseLong(claims.getSubject());
+        Map<String, Object> tokenResult = new HashMap<>();
+        tokenResult.put("email", claims.get("email"));
+        tokenResult.put("id", Long.parseLong(claims.getSubject()));
+        return tokenResult;
     }
 
     public boolean validateToken(String authToken) {

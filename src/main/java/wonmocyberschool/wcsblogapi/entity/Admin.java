@@ -21,6 +21,7 @@ public class Admin {
 
     @Column(nullable = false)
     private String adminEmail;
+
     @JsonIgnore
     private String password;
 
