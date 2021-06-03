@@ -1,5 +1,7 @@
 package wonmocyberschool.wcsblogapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,10 +30,17 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Image> images = new ArrayList<>();
 
+    //생성, 수정 API request 로 받는 부분
     private String title;
-
     @Lob
     private String text;
+    @Transient
+    private Long categoryId;
+    @Transient
+    private List<String> tagList = new ArrayList<>();
+    @Transient
+    private List<String> imageUrlList = new ArrayList<>();
+    //----------------------------------
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
@@ -108,5 +117,29 @@ public class Post {
 
     public void setCreatedTime(Date createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public List<String> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<String> tagList) {
+        this.tagList = tagList;
+    }
+
+    public List<String> getImageUrlList() {
+        return imageUrlList;
+    }
+
+    public void setImageUrlList(List<String> imageUrlList) {
+        this.imageUrlList = imageUrlList;
     }
 }

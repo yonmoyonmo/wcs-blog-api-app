@@ -24,7 +24,7 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    //private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private String wonmoPromise;
 
@@ -39,16 +39,10 @@ public class AdminController {
         this.jwtUtil = jwtUtil;
     }
 
-    //일단 프론트엔드가 없으니 여기서 토큰을 받아 봅니다...
     @GetMapping("/test/oauth")
-    public String authTest(HttpServletRequest req, HttpServletResponse res){
-        if(req.getParameter("error") != null){
-            logger.info("error at /test/oauth");
-            logger.info(req.getParameter("error"));
-        }else{
-            logger.info(req.getParameter("token"));
-        }
-        return "WCS API server";
+    public String testOauth(@RequestParam("token") String token){
+        System.out.println("token : " +token);
+        return "탁탁탁탁탁";
     }
 
     //wonmo
@@ -84,6 +78,8 @@ public class AdminController {
         }
     }
 
+    //notification 도 만들어야 한다.
+
     //category
     @PostMapping("/category")
     public ResponseEntity<Response> addCategory(
@@ -92,8 +88,7 @@ public class AdminController {
 
         Response response = new Response();
         String token = request.getHeader("Authorization");
-        Map<String, Object> tokenResult = jwtUtil.getUserIdAndEmailFromToken(token);
-        String email = tokenResult.get("email").toString();
+        String email = jwtUtil.getUserEmailFromToken(token);
         if(adminService.createCategory(email, category)){
             response.setMessage("new category is created");
             response.setSuccess(true);

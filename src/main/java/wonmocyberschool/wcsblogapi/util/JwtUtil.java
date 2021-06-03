@@ -68,20 +68,27 @@ public class JwtUtil {
     }
 
 
-    public Map<String, Object> getUserIdAndEmailFromToken(String token) {
+    public String getUserEmailFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtProperties.getSecretKey())
                 .parseClaimsJws(token)
                 .getBody();
-        Map<String, Object> tokenResult = new HashMap<>();
-        tokenResult.put("email", claims.get("email"));
-        tokenResult.put("id", Long.parseLong(claims.getSubject()));
-        return tokenResult;
+        String email = claims.get("email").toString();
+        return email;
+    }
+    public String getUsernameFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtProperties.getSecretKey())
+                .parseClaimsJws(token)
+                .getBody();
+        String username = claims.get("username").toString();
+        return username;
     }
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtProperties.getSecretKey()).parseClaimsJws(authToken);
+            Claims claims = Jwts.parser().setSigningKey(jwtProperties.getSecretKey()).parseClaimsJws(authToken).getBody();
+            logger.info(claims.get("email").toString());
             return true;
         } catch (SignatureException ex) {
             logger.error("Invalid JWT signature");

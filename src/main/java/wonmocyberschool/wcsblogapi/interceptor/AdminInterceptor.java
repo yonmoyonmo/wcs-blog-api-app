@@ -32,8 +32,7 @@ public class AdminInterceptor implements HandlerInterceptor {
                 logger.info("token invalid");
                 return false;
             }else{
-                Map<String,Object> tokenInfo = jwtUtil.getUserIdAndEmailFromToken(token);
-                String tokenEmail = tokenInfo.get("email").toString();
+                String tokenEmail = jwtUtil.getUserEmailFromToken(token);
                 return adminRepository.existsByAdminEmail(tokenEmail);
             }
         }else{
