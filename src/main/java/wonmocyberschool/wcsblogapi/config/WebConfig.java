@@ -41,7 +41,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/public/**");
         registry.addInterceptor(new AdminInterceptor(jwtUtil, adminRepository))
                 .addPathPatterns("/admin/**")
-                .excludePathPatterns("/admin/wonmo/**", "/admin/test/oauth/**");
+                .excludePathPatterns("/admin/wonmo/**", "/admin/test/oauth/**", "/admin/public/**");
     }
 
     @Bean

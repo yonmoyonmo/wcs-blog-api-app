@@ -16,6 +16,8 @@ public class UserProfile {
     @JoinColumn(name = "blog_user_id")
     private BlogUser owner;
 
+    private String profileImageURL;
+
     @Lob
     private String description;
 
@@ -47,6 +49,14 @@ public class UserProfile {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getProfileImageURL() {
+        return profileImageURL;
+    }
+
+    public void setProfileImageURL(String profileImageURL) {
+        this.profileImageURL = profileImageURL;
     }
 
     public Date getCreatedTime() {

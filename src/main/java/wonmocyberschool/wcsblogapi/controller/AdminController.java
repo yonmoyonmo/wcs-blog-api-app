@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import wonmocyberschool.wcsblogapi.config.JwtProperties;
 import wonmocyberschool.wcsblogapi.entity.Admin;
 import wonmocyberschool.wcsblogapi.entity.Category;
+import wonmocyberschool.wcsblogapi.entity.Notification;
 import wonmocyberschool.wcsblogapi.payload.Response;
 import wonmocyberschool.wcsblogapi.payload.Wonmo;
 import wonmocyberschool.wcsblogapi.service.AdminService;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")
@@ -45,7 +47,7 @@ public class AdminController {
         return "탁탁탁탁탁";
     }
 
-    //wonmo
+    //-------------------------wonmo-------------------
     @PostMapping("/wonmo")
     public ResponseEntity<Response> addAdmin(@RequestBody Wonmo wonmo){
         Response response = new Response();
@@ -78,14 +80,61 @@ public class AdminController {
         }
     }
 
-    //notification 도 만들어야 한다.
 
-    //category
+    //---------------notification----------------------
+    @PostMapping("/notification")
+    public ResponseEntity<Response> createNotification(HttpServletRequest request,
+                                                       @RequestBody Notification notification){
+        Response response = new Response();
+        String token = request.getHeader("Authorization");
+        String email = jwtUtil.getUserEmailFromToken(token);
+        if(adminService.saveNotification(email, notification)){
+            response.setMessage("new notification is created");
+            response.setSuccess(true);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }else{
+            response.setMessage("notification creation failed");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/notification")
+    public ResponseEntity<Response> updateNotification(@RequestBody Notification notification){
+        Response response = new Response();
+        if(adminService.updateNotification(notification)) {
+            response.setMessage("notification updated");
+            response.setSuccess(true);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }else{
+            response.setMessage("something went wrong check something me in the future");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/public/notification/list")
+    public ResponseEntity<Response> getNotificationList(){
+        Response response = new Response();
+        List<Notification> notifications = adminService.getNotificationList();
+        if(notifications.isEmpty()){
+            response.setMessage("there's no notification");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.NOT_FOUND);
+        }else{
+            response.setMessage("OK");
+            response.setSuccess(true);
+            response.setData(notifications);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+    }
+
+
+    //---------------category------------------------
+
     @PostMapping("/category")
-    public ResponseEntity<Response> addCategory(
-            HttpServletRequest request,
+    public ResponseEntity<Response> addCategory(HttpServletRequest request,
             @RequestBody Category category){
-
         Response response = new Response();
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
@@ -100,12 +149,23 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/category/list")
-    public ResponseEntity<Response> getCategoryList(
-        HttpServletRequest request){
-
+    @PutMapping("/category")
+    public ResponseEntity<Response> updateCategory(@RequestBody Category category){
         Response response = new Response();
+        if(adminService.updateCategory(category)) {
+            response.setMessage("category updated");
+            response.setSuccess(true);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }else{
+            response.setMessage("something went wrong check something me in the future");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @GetMapping("/public/category/list")
+    public ResponseEntity<Response> getCategoryList(){
+        Response response = new Response();
         List<Category> categories = adminService.readCategoryList();
         if(categories.isEmpty()){
             response.setMessage("there's no categories");

@@ -1,5 +1,7 @@
 package wonmocyberschool.wcsblogapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.ArrayList;
@@ -21,12 +23,15 @@ public class BlogUser {
     private String username;
 
     @OneToMany(mappedBy = "owner")
+    @JsonIgnore
     private List<UserProfile> profiles = new ArrayList<>();
 
     @OneToMany(mappedBy = "blogUser")
+    @JsonIgnore
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "blogUser")
+    @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 
     //블로그 내에서 재밌게 쓰일 유니크한 닉네임

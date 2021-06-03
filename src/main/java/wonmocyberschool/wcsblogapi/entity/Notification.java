@@ -1,5 +1,7 @@
 package wonmocyberschool.wcsblogapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -14,6 +16,7 @@ public class Notification{
 
     @ManyToOne
     @JoinColumn(name = "admin_id")
+    @JsonIgnore
     private Admin admin;
 
     @Lob
@@ -24,6 +27,7 @@ public class Notification{
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedTime;
+    //-----------------------------------
 
     public Long getId() {
         return id;
