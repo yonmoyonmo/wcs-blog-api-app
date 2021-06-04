@@ -6,4 +6,6 @@ import wonmocyberschool.wcsblogapi.entity.Tag;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
+    boolean existsByTagName(String tagName);
+    Tag findByTagName(String tagName);
 }

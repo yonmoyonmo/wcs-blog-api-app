@@ -26,7 +26,7 @@ public class Post {
     private BlogUser blogUser;
 
     @OneToMany(mappedBy = "post")
-    private List<Tag> tags = new ArrayList<>();
+    private List<PostTagRelation> postTagRelations = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
     private List<Image> images = new ArrayList<>();
@@ -36,13 +36,13 @@ public class Post {
     @Lob
     private String text;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Transient
     private Long categoryId;
-    @JsonIgnore
+    //@JsonIgnore
     @Transient
     private List<String> tagList = new ArrayList<>();
-    @JsonIgnore
+    //@JsonIgnore
     @Transient
     private List<String> imageUrlList = new ArrayList<>();
     //----------------------------------
@@ -82,14 +82,6 @@ public class Post {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
     }
 
     public List<Image> getImages() {
@@ -146,5 +138,12 @@ public class Post {
 
     public void setImageUrlList(List<String> imageUrlList) {
         this.imageUrlList = imageUrlList;
+    }
+    public List<PostTagRelation> getPostTagRelations() {
+        return postTagRelations;
+    }
+
+    public void setPostTagRelations(List<PostTagRelation> postTagRelations) {
+        this.postTagRelations = postTagRelations;
     }
 }

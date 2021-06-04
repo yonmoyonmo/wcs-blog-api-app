@@ -42,7 +42,6 @@ public class JwtInterceptor implements HandlerInterceptor {
                 String tokenEmail = jwtUtil.getUserEmailFromToken(token);
                 if(blogUserRepository.existsByEmail(tokenEmail)){
                     logger.info("logged in : " + tokenEmail);
-                    return true;
                 }else{
                     String username = jwtUtil.getUsernameFromToken(token);
 
@@ -60,8 +59,8 @@ public class JwtInterceptor implements HandlerInterceptor {
 
 
                     logger.info("new user has been registered : " + tokenEmail);
-                    return true;
                 }
+                return true;
             }
         }else{
             logger.info("no token, 인터셉터가 처리했으니 안심하라구!");

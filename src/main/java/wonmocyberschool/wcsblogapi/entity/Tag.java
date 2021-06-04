@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Tag {
@@ -16,23 +17,18 @@ public class Tag {
     private String tagName;
 
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name="post_id")
-    private Post post;
+    @OneToMany(mappedBy = "tag")
+    private List<PostTagRelation> postTagRelation;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
 
-    public Post getPost() {
-        return post;
+    public List<PostTagRelation> getPostTagRelation() {
+        return postTagRelation;
     }
-    //편의 메소드
-    public void setPost(Post post) {
-        if(this.post != null){
-            this.post.getTags().remove(this);
-        }
-        this.post = post;
-        post.getTags().add(this);
+
+    public void setPostTagRelation(List<PostTagRelation> postTagRelation) {
+        this.postTagRelation = postTagRelation;
     }
 
     public Long getId() {
@@ -58,4 +54,5 @@ public class Tag {
     public void setCreatedTime(Date createdTime) {
         this.createdTime = createdTime;
     }
+
 }

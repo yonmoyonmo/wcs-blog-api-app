@@ -25,17 +25,20 @@ public class PostService {
     private final ImageRepository imageRepository;
     private final TagRepository tagRepository;
     private final CategoryRepository categoryRepository;
+    private final PostTagRepository postTagRepository;
     @Autowired
     public PostService(PostRepository postRepository,
                        BlogUserRepository blogUserRepository,
                        ImageRepository imageRepository,
                        TagRepository tagRepository,
-                       CategoryRepository categoryRepository){
+                       CategoryRepository categoryRepository,
+                       PostTagRepository postTagRepository){
         this.postRepository = postRepository;
         this.blogUserRepository = blogUserRepository;
         this.imageRepository = imageRepository;
         this.tagRepository = tagRepository;
         this.categoryRepository = categoryRepository;
+        this.postTagRepository = postTagRepository;
     }
 
     public List<Post> getPostsByCategory(Long categoryId){
@@ -68,7 +71,6 @@ public class PostService {
             return false;
         }
         Optional<Category> categoryOptional = categoryRepository.findById(post.getCategoryId());
-
         Category category = categoryOptional.orElse(null);
         post.setBlogUser(blogUser);
         if(category == null){
@@ -76,18 +78,14 @@ public class PostService {
             return false;
         }
         post.setCategory(category);
+        post.setCreatedTime(new Date());
+        postRepository.save(post);
 
         //이미지와 태그를 임시 필드에서 빼가지고 영속화해야함...
         List<String> tagList = post.getTagList();
         List<String> imageUrlList = post.getImageUrlList();
-        if(saveTags(tagList, post) && saveImages(imageUrlList, post)){
-            System.out.println("let's see the post");
-            System.out.println(post.getTags());
-            System.out.println(post.getImages());
-            System.out.println(post.getCategory().getTitle());
-            System.out.println(post.getBlogUser().getEmail());
 
-            post.setCreatedTime(new Date());
+        if(saveTags(tagList, post) && saveImages(imageUrlList, post)){
             postRepository.save(post);
             return true;
         }else{
@@ -98,14 +96,32 @@ public class PostService {
     private boolean saveTags(List<String> tagList, Post post){
         try{
             for(String tag : tagList){
-                Tag newTag = new Tag();
-                newTag.setTagName(tag);
-                newTag.setPost(post);
-                newTag.setCreatedTime(new Date());
-                tagRepository.save(newTag);
+                if(tagRepository.existsByTagName(tag)){
+                    System.out.println("debug001");
+                    Tag existingTag = tagRepository.findByTagName(tag);
+                    System.out.println("debug002");
+                    PostTagRelation postTagRelation = new PostTagRelation();
+                    postTagRelation.setPost(post);
+                    postTagRelation.setTag(existingTag);
+                    System.out.println("debug003");
+                    postTagRepository.save(postTagRelation);
+                }else{
+                    Tag newTag = new Tag();
+                    newTag.setTagName(tag);
+                    newTag.setCreatedTime(new Date());
+                    tagRepository.save(newTag);
+
+                    PostTagRelation postTagRelation = new PostTagRelation();
+                    System.out.println("debug01");
+                    postTagRelation.setPost(post);
+                    postTagRelation.setTag(newTag);
+                    System.out.println("debug02");
+                    postTagRepository.save(postTagRelation);
+                    System.out.println("debug03");
+                }
             }
         }catch (Exception e){
-            logger.error(e.getMessage() + " : while saving tags at savePost");
+            logger.error(e.getMessage() + " : while saving tags at savePost : " + e);
             return false;
         }
         logger.info("tags are saved");
