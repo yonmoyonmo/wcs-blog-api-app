@@ -13,6 +13,7 @@ import wonmocyberschool.wcsblogapi.interceptor.AdminInterceptor;
 import wonmocyberschool.wcsblogapi.interceptor.JwtInterceptor;
 import wonmocyberschool.wcsblogapi.repository.AdminRepository;
 import wonmocyberschool.wcsblogapi.repository.BlogUserRepository;
+import wonmocyberschool.wcsblogapi.repository.UserProfileRepository;
 import wonmocyberschool.wcsblogapi.util.JwtUtil;
 
 @Configuration
@@ -24,6 +25,8 @@ public class WebConfig implements WebMvcConfigurer {
     private AdminRepository adminRepository;
     @Autowired
     private BlogUserRepository blogUserRepository;
+    @Autowired
+    private UserProfileRepository userProfileRepository;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -36,7 +39,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new JwtInterceptor(jwtUtil,blogUserRepository))
+        registry.addInterceptor(new JwtInterceptor(jwtUtil,blogUserRepository,userProfileRepository))
                 .addPathPatterns("/api/**")
                 .excludePathPatterns("/api/public/**");
         registry.addInterceptor(new AdminInterceptor(jwtUtil, adminRepository))

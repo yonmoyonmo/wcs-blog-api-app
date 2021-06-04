@@ -16,6 +16,7 @@ public class UserProfile {
     @JoinColumn(name = "blog_user_id")
     private BlogUser owner;
 
+    //스토리지 서버에 프로필 이미지 저장하는 API 만들어야 한다.
     private String profileImageURL;
 
     @Lob

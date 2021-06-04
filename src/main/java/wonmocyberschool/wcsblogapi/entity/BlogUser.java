@@ -23,7 +23,6 @@ public class BlogUser {
     private String username;
 
     @OneToMany(mappedBy = "owner")
-    @JsonIgnore
     private List<UserProfile> profiles = new ArrayList<>();
 
     @OneToMany(mappedBy = "blogUser")

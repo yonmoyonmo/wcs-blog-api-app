@@ -36,7 +36,7 @@ public class AdminInterceptor implements HandlerInterceptor {
                 return adminRepository.existsByAdminEmail(tokenEmail);
             }
         }else{
-            logger.info("no token");
+            logger.info("no token, 인터셉터가 처리했으니 안심하라구!");
             return false;
         }
     }
