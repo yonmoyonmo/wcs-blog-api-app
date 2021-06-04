@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import wonmocyberschool.wcsblogapi.entity.*;
 import wonmocyberschool.wcsblogapi.repository.*;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +46,7 @@ public class PostService {
             try {
                 return postRepository.findAllByCategory(category.get());
             } catch (Exception e) {
-                logger.error(e.getMessage() + " : getPostsByCate");
+                logger.error(e.getMessage() + " : getPostsByCate : "+e);
                 return null;
             }
         }else return null;
@@ -57,8 +56,31 @@ public class PostService {
         try{
             return postRepository.findById(postId);
         }catch (Exception e){
-            logger.error(e.getMessage() + " : getPostById");
+            logger.error(e.getMessage() + " : getPostById : "+e);
             return null;
+        }
+    }
+
+    public List<Post> getPostsByTagId(Long tagId){
+        Optional<Tag> tagOptional = tagRepository.findById(tagId);
+        List<Post> posts = new ArrayList<>();
+        if(tagOptional.isPresent()){
+            try {
+                Tag tag = tagOptional.get();
+                List<PostTagRelation> postTagRelations = postTagRepository.findAllByTag(tag);
+                for (PostTagRelation postTagRelation : postTagRelations) {
+                    if(!posts.contains(postTagRelation.getPost())){
+                        posts.add(postTagRelation.getPost());
+                    }
+                }
+                return posts;
+            }catch (Exception e){
+                logger.error(e +" : getPostsByTagId");
+                return null;
+            }
+        }else{
+            logger.info("there's no tag with id : " + tagId);
+            return posts;
         }
     }
 
@@ -97,13 +119,10 @@ public class PostService {
         try{
             for(String tag : tagList){
                 if(tagRepository.existsByTagName(tag)){
-                    System.out.println("debug001");
                     Tag existingTag = tagRepository.findByTagName(tag);
-                    System.out.println("debug002");
                     PostTagRelation postTagRelation = new PostTagRelation();
                     postTagRelation.setPost(post);
                     postTagRelation.setTag(existingTag);
-                    System.out.println("debug003");
                     postTagRepository.save(postTagRelation);
                 }else{
                     Tag newTag = new Tag();
@@ -112,12 +131,9 @@ public class PostService {
                     tagRepository.save(newTag);
 
                     PostTagRelation postTagRelation = new PostTagRelation();
-                    System.out.println("debug01");
                     postTagRelation.setPost(post);
                     postTagRelation.setTag(newTag);
-                    System.out.println("debug02");
                     postTagRepository.save(postTagRelation);
-                    System.out.println("debug03");
                 }
             }
         }catch (Exception e){
@@ -137,7 +153,7 @@ public class PostService {
                 imageRepository.save(newImage);
             }
         }catch (Exception e){
-            logger.error(e.getMessage() + " : while saving images at savePost");
+            logger.error(e.getMessage() + " : while saving images at savePost : "+e);
             return false;
         }
         return true;

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import wonmocyberschool.wcsblogapi.entity.Category;
 import wonmocyberschool.wcsblogapi.entity.Post;
 import wonmocyberschool.wcsblogapi.payload.Response;
 import wonmocyberschool.wcsblogapi.service.PostService;
@@ -50,7 +49,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("/post/category/{categoryId}")
+    @GetMapping("/public/post/category/{categoryId}")
     public ResponseEntity<Response> getPostsByCategory(@PathVariable("categoryId") Long categoryId){
         Response response = new Response();
         List<Post> posts = postService.getPostsByCategory(categoryId);
@@ -70,7 +69,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("/post/{id}")
+    @GetMapping("/public/post/{id}")
     public ResponseEntity<Response> getOnePost(@PathVariable("id") Long postId){
         Response response = new Response();
         Optional<Post> postOptional = postService.getPostById(postId);
@@ -90,6 +89,26 @@ public class PostController {
         }
     }
 
+    @GetMapping("/public/post/tag/{tagId}")
+    public ResponseEntity<Response> getPostsByTagId(
+            @PathVariable("tagId") Long tagId){
+        Response response = new Response();
+        List<Post> posts = postService.getPostsByTagId(tagId);
+        if(posts.isEmpty()){
+            response.setMessage("no posts");
+            response.setSuccess(true);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }else if(posts == null){
+            response.setMessage("something went wrong");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }else{
+            response.setMessage("OK");
+            response.setSuccess(true);
+            response.setData(posts);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+    }
 
 }
 

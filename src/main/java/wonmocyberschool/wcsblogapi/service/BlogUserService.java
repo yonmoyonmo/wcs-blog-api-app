@@ -35,7 +35,7 @@ public class BlogUserService {
         try {
             blogUserRepository.save(user);
         }catch (Exception e){
-            logger.error(e.getMessage()+" : at saveBlogUserNickname");
+            logger.error(e.getMessage()+" : at saveBlogUserNickname : "+e);
             return false;
         }
         return true;
@@ -52,7 +52,7 @@ public class BlogUserService {
             userProfileRepository.save(userProfile);
             blogUserRepository.save(user);
         }catch (Exception e){
-            logger.error(e.getMessage()+" : profile update");
+            logger.error(e.getMessage()+" : profile update : "+e);
             return false;
         }
         return true;

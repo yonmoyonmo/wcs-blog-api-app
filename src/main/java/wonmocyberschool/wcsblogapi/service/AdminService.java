@@ -50,7 +50,7 @@ public class AdminService {
         try{
             adminRepository.save(newAdmin);
         }catch (Exception e){
-            logger.info(e.getMessage());
+            logger.info(e.toString());
         }
         return "wonmo added";
     }
@@ -99,7 +99,7 @@ public class AdminService {
         try {
             categories = categoryRepository.findAll();
         }catch (Exception e){
-            logger.info(e.getMessage()+" : R_Cate");
+            logger.info(e.getMessage()+" : R_Cate "+e);
         }
         return categories;
     }
@@ -114,7 +114,7 @@ public class AdminService {
             notificationRepository.save(notification);
             return true;
         }catch (Exception e){
-            logger.info(e.getMessage() + " : S_Noti");
+            logger.info(e.getMessage() + " : S_Noti "+e);
             return false;
         }
     }
@@ -137,7 +137,7 @@ public class AdminService {
         try{
             notifications = notificationRepository.findAll();
         }catch (Exception e){
-            logger.error(e.getMessage() + " : getNotificationList");
+            logger.error(e.getMessage() + " : getNotificationList "+e);
         }
         return notifications;
     }
