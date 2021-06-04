@@ -55,8 +55,9 @@ public class JwtInterceptor implements HandlerInterceptor {
                     userProfile.setCreatedTime(new Date());
                     userProfile.setOwner(newUser);
 
-                    userProfileRepository.save(userProfile);
                     blogUserRepository.save(newUser);
+                    userProfileRepository.save(userProfile);
+
 
                     logger.info("new user has been registered : " + tokenEmail);
                     return true;

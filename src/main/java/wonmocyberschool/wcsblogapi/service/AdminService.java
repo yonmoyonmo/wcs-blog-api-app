@@ -57,6 +57,9 @@ public class AdminService {
 
     public Admin logginWonmo(Wonmo wonmo){
         Admin admin = adminRepository.findByAdminEmail(wonmo.getWonmo());
+        if(admin == null){
+            return null;
+        }
         if(passwordEncoder.matches(wonmo.getWonmokey(), admin.getPassword())){
             return admin;
         }else{

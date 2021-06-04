@@ -1,5 +1,7 @@
 package wonmocyberschool.wcsblogapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -12,6 +14,7 @@ public class Image {
     private String imageURI;
 
     //foreign key
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;

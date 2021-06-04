@@ -35,7 +35,6 @@ public class BlogUserController {
     public ResponseEntity<Response> setBlogUserNickname (HttpServletRequest request,
                                                          @RequestBody String nickname){
         Response response = new Response();
-
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
         if(blogUserService.setBlogUserNickname(email, nickname)){
@@ -55,7 +54,6 @@ public class BlogUserController {
             @RequestBody UserProfile userProfile
             ){
         Response response = new Response();
-
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
         if(blogUserService.updateBlogUserProfile(email, userProfile)){
@@ -67,6 +65,21 @@ public class BlogUserController {
         }
         return new ResponseEntity<Response>(response, HttpStatus.OK);
     }
-
-
+    @GetMapping("/user/profile")
+    public ResponseEntity<Response> getUserProfile(HttpServletRequest request){
+        Response response = new Response();
+        String token = request.getHeader("Authorization");
+        String email = jwtUtil.getUserEmailFromToken(token);
+        UserProfile userProfile = blogUserService.getUserProfile(email);
+        if(userProfile == null){
+            response.setSuccess(false);
+            response.setMessage("없는데여?");
+            return new ResponseEntity<Response>(response, HttpStatus.NOT_FOUND);
+        }else{
+            response.setMessage("ok");
+            response.setSuccess(true);
+            response.setData(userProfile);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+    }
 }

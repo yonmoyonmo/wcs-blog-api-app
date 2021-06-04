@@ -1,5 +1,7 @@
 package wonmocyberschool.wcsblogapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -13,6 +15,7 @@ public class Tag {
     @Column(nullable = false)
     private String tagName;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="post_id")
     private Post post;

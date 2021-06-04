@@ -15,6 +15,7 @@ public class Post {
     private Long id;
 
     //foreign key
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -34,10 +35,14 @@ public class Post {
     private String title;
     @Lob
     private String text;
+
+    @JsonIgnore
     @Transient
     private Long categoryId;
+    @JsonIgnore
     @Transient
     private List<String> tagList = new ArrayList<>();
+    @JsonIgnore
     @Transient
     private List<String> imageUrlList = new ArrayList<>();
     //----------------------------------

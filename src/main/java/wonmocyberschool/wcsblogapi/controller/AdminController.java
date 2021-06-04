@@ -26,7 +26,7 @@ import java.util.Optional;
 @RequestMapping("/admin")
 public class AdminController {
 
-    //private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private String wonmoPromise;
 

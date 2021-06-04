@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wonmocyberschool.wcsblogapi.entity.*;
 import wonmocyberschool.wcsblogapi.repository.*;
-import wonmocyberschool.wcsblogapi.util.JwtUtil;
 
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Transactional
 public class PostService {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final PostRepository postRepository;
     private final BlogUserRepository blogUserRepository;
@@ -37,6 +38,28 @@ public class PostService {
         this.categoryRepository = categoryRepository;
     }
 
+    public List<Post> getPostsByCategory(Long categoryId){
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if(category.isPresent()) {
+            try {
+                return postRepository.findAllByCategory(category.get());
+            } catch (Exception e) {
+                logger.error(e.getMessage() + " : getPostsByCate");
+                return null;
+            }
+        }else return null;
+    }
+
+    public Optional<Post> getPostById(Long postId){
+        try{
+            return postRepository.findById(postId);
+        }catch (Exception e){
+            logger.error(e.getMessage() + " : getPostById");
+            return null;
+        }
+    }
+
+
     public boolean savePost(Post post, String email){
         //인터셉터에서 검증한 토큰이므로 이메일로 찾으면 백퍼 있음
         BlogUser blogUser = blogUserRepository.findByEmail(email);
@@ -45,8 +68,13 @@ public class PostService {
             return false;
         }
         Optional<Category> categoryOptional = categoryRepository.findById(post.getCategoryId());
+
         Category category = categoryOptional.orElse(null);
         post.setBlogUser(blogUser);
+        if(category == null){
+            logger.error("no category");
+            return false;
+        }
         post.setCategory(category);
 
         //이미지와 태그를 임시 필드에서 빼가지고 영속화해야함...
