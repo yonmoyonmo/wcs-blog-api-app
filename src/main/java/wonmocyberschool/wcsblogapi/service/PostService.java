@@ -84,6 +84,40 @@ public class PostService {
         }
     }
 
+    public boolean updatePost(Post post){
+        Optional<Post> existingPostOptional = postRepository.findById(post.getId());
+        if(!existingPostOptional.isPresent()){
+            logger.error("no post with id : "+post.getId());
+            return false;
+        }else{
+            //제목, 글 내용, 이미지, 태그
+            Post existingPost = existingPostOptional.get();
+            existingPost.setTitle(post.getTitle());
+            existingPost.setText(post.getText());
+            postRepository.save(existingPost);
+
+            try {
+                logger.info("debug 01");
+                postTagRepository.deleteRelatedTags(existingPost);
+                imageRepository.deleteRelatedImages(existingPost);
+            }catch (Exception e){
+                logger.error(e.toString());
+            }
+
+            List<String> tagList = post.getTagList();
+            List<String> imageUrlList = post.getImageUrlList();
+
+            if(saveTags(tagList, existingPost) && saveImages(imageUrlList, existingPost)){
+                postRepository.save(existingPost);
+                return true;
+            }else{
+                logger.error("at update post");
+                return false;
+            }
+
+        }
+
+    }
 
     public boolean savePost(Post post, String email){
         //인터셉터에서 검증한 토큰이므로 이메일로 찾으면 백퍼 있음
@@ -115,6 +149,7 @@ public class PostService {
             return false;
         }
     }
+
     private boolean saveTags(List<String> tagList, Post post){
         try{
             for(String tag : tagList){

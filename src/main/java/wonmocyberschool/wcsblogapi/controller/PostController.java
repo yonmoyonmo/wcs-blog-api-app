@@ -49,6 +49,29 @@ public class PostController {
         }
     }
 
+    //제목, 이미지, 태그, 내용만 수정 가능함, 카테고리 수정 불가능.
+    //왜? 내맘. 꼬우면 삭제하고 다시써~
+    @PutMapping("/post")
+    public ResponseEntity<Response> updatePost(HttpServletRequest request,
+                                               @RequestBody Post post){
+        Response response = new Response();
+        if(post.getId() == null){
+            response.setMessage("no post id");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+        }
+        if(!postService.updatePost(post)){
+            response.setMessage("something went wrong");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }else{
+            response.setMessage("post updated");
+            response.setSuccess(true);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+
+    }
+
     @GetMapping("/public/post/category/{categoryId}")
     public ResponseEntity<Response> getPostsByCategory(@PathVariable("categoryId") Long categoryId){
         Response response = new Response();

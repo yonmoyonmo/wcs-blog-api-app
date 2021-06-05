@@ -31,7 +31,7 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Image> images = new ArrayList<>();
 
-    //생성, 수정 API request 로 받는 부분
+    //생성, 수정 API request 로 받는 부분--------------------------
     private String title;
     @Lob
     private String text;
@@ -45,7 +45,7 @@ public class Post {
     //@JsonIgnore
     @Transient
     private List<String> imageUrlList = new ArrayList<>();
-    //----------------------------------
+    //-------------------------------------------------------------
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
