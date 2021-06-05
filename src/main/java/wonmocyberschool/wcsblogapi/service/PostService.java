@@ -84,32 +84,54 @@ public class PostService {
         }
     }
 
-    public boolean deleteByPostId(Long postId){
+    public boolean deleteByPostId(String email, Long postId){
         Optional<Post> targetPostOptional = postRepository.findById(postId);
         if(!targetPostOptional.isPresent()){
             logger.error("there's no post with id : "+ postId);
             return false;
         }else{
+
             Post targetPost = targetPostOptional.get();
+            //BlogUser user = blogUserRepository.findByEmail(email);
+
+            //요청하신 분과 포스팅 주인님이 같은지 확인
+            if(targetPost.getBlogUser().getEmail() != email){
+                logger.error("email : "+email+
+                        "\nthis post's user email : "
+                        +targetPost.getBlogUser().getEmail());
+                return false;
+            }
             postRepository.delete(targetPost);
             return true;
         }
     }
 
-    public boolean updatePost(Post post){
+    public boolean updatePost(String email, Post post){
         Optional<Post> existingPostOptional = postRepository.findById(post.getId());
+
+        //이럴 필요 없을듯
+        //BlogUser user = blogUserRepository.findByEmail(email);
+
         if(!existingPostOptional.isPresent()){
             logger.error("no post with id : "+post.getId());
             return false;
         }else{
             //제목, 글 내용, 이미지, 태그
             Post existingPost = existingPostOptional.get();
+
+            //요청하신 분과 포스팅 주인님이 같은지 확인
+            if(existingPost.getBlogUser().getEmail() != email){
+                logger.error("email : "+email+
+                        "\nthis post's user email : "
+                        +existingPost.getBlogUser().getEmail());
+                return false;
+            }
+
             existingPost.setTitle(post.getTitle());
             existingPost.setText(post.getText());
             postRepository.save(existingPost);
 
             try {
-                logger.info("debug 01");
                 postTagRepository.deleteRelatedTags(existingPost);
                 imageRepository.deleteRelatedImages(existingPost);
             }catch (Exception e){

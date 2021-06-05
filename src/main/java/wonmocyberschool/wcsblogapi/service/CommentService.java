@@ -35,7 +35,7 @@ public class CommentService {
     public boolean createComment(String email, Comment comment){
         BlogUser user = blogUserRepository.findByEmail(email);
         if(user == null){
-            logger.error("this email not matched : " + email);
+            logger.error("not matched user : " + email);
             return false;
         }
         Long postId = comment.getPostId();
@@ -56,4 +56,39 @@ public class CommentService {
             return true;
         }
     }
+
+    public boolean updateComment(String email, Comment comment){
+        Optional<Comment> existingCommentOptional = commentRepository.findById(comment.getId());
+        if(!existingCommentOptional.isPresent()){
+            logger.error("comment not exists : " + comment.getId());
+            return false;
+        }else{
+            Comment existingComment = existingCommentOptional.get();
+            if(existingComment.getBlogUser().getEmail() != email){
+                logger.error("sibal email");
+                return false;
+            }
+            existingComment.setUpdatedTime(new Date());
+            existingComment.setText(comment.getText());
+            commentRepository.save(existingComment);
+            return true;
+        }
+    }
+
+    public boolean deleteComment(String email, Comment comment){
+        Optional<Comment> targetCommentOptional = commentRepository.findById(comment.getId());
+        if(!targetCommentOptional.isPresent()){
+            logger.error("no comment with this id : "+comment.getId());
+            return false;
+        }else{
+            Comment targetComment = targetCommentOptional.get();
+            if(targetComment.getBlogUser().getEmail() != email){
+                logger.error("email not matched with : "+email);
+                return false;
+            }
+            commentRepository.delete(targetComment);
+            return true;
+        }
+    }
+
 }

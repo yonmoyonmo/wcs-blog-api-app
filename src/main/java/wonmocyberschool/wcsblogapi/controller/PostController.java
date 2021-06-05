@@ -54,13 +54,17 @@ public class PostController {
     @PutMapping("/post")
     public ResponseEntity<Response> updatePost(HttpServletRequest request,
                                                @RequestBody Post post){
+        String token = request.getHeader("Authorization");
+        String email = jwtUtil.getUserEmailFromToken(token);
+
         Response response = new Response();
+
         if(post.getId() == null){
             response.setMessage("no post id");
             response.setSuccess(false);
             return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
         }
-        if(!postService.updatePost(post)){
+        if(!postService.updatePost(email, post)){
             response.setMessage("something went wrong");
             response.setSuccess(false);
             return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -73,7 +77,11 @@ public class PostController {
     }
 
     @DeleteMapping("/post")
-    public ResponseEntity<Response> deletePost(@RequestBody Post post){
+    public ResponseEntity<Response> deletePost(HttpServletRequest request,
+                                               @RequestBody Post post){
+        String token = request.getHeader("Authorization");
+        String email = jwtUtil.getUserEmailFromToken(token);
+
         Response response = new Response();
         Long postId = post.getId();
         if(postId == null){
@@ -81,7 +89,7 @@ public class PostController {
             response.setSuccess(false);
             return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
         }
-        if(!postService.deleteByPostId(postId)){
+        if(!postService.deleteByPostId(email, postId)){
             response.setMessage("delete failed");
             response.setSuccess(false);
             return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
