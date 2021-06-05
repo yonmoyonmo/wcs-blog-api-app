@@ -19,9 +19,35 @@ public class Comment {
     @JoinColumn(name = "blog_user_id")
     private BlogUser blogUser;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="post_id")
     private Post post;
+
+    @JsonIgnore
+    @Transient
+    private Long postId;
+
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        if(this.post != null){
+            this.post.getComments().remove(this);
+        }
+        this.post = post;
+        post.getComments().add(this);
+    }
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
