@@ -72,6 +72,26 @@ public class PostController {
 
     }
 
+    @DeleteMapping("/post")
+    public ResponseEntity<Response> deletePost(@RequestBody Post post){
+        Response response = new Response();
+        Long postId = post.getId();
+        if(postId == null){
+            response.setMessage("there's no post id");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+        }
+        if(!postService.deleteByPostId(postId)){
+            response.setMessage("delete failed");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }else{
+            response.setMessage("delete success");
+            response.setSuccess(true);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+    }
+
     @GetMapping("/public/post/category/{categoryId}")
     public ResponseEntity<Response> getPostsByCategory(@PathVariable("categoryId") Long categoryId){
         Response response = new Response();

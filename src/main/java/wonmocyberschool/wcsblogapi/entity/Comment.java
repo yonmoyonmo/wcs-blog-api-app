@@ -19,6 +19,10 @@ public class Comment {
     @JoinColumn(name = "blog_user_id")
     private BlogUser blogUser;
 
+    @ManyToOne
+    @JoinColumn(name="post_id")
+    private Post post;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
 

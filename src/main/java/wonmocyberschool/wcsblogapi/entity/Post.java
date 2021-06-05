@@ -25,11 +25,14 @@ public class Post {
     @JoinColumn(name = "blog_user_id")
     private BlogUser blogUser;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<PostTagRelation> postTagRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     //생성, 수정 API request 로 받는 부분--------------------------
     private String title;
@@ -145,5 +148,12 @@ public class Post {
 
     public void setPostTagRelations(List<PostTagRelation> postTagRelations) {
         this.postTagRelations = postTagRelations;
+    }
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

@@ -22,14 +22,14 @@ public class BlogUser {
 
     private String username;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private List<UserProfile> profiles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "blogUser")
+    @OneToMany(mappedBy = "blogUser", orphanRemoval = true)
     @JsonIgnore
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "blogUser")
+    @OneToMany(mappedBy = "blogUser", orphanRemoval = true)
     @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 

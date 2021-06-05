@@ -84,6 +84,18 @@ public class PostService {
         }
     }
 
+    public boolean deleteByPostId(Long postId){
+        Optional<Post> targetPostOptional = postRepository.findById(postId);
+        if(!targetPostOptional.isPresent()){
+            logger.error("there's no post with id : "+ postId);
+            return false;
+        }else{
+            Post targetPost = targetPostOptional.get();
+            postRepository.delete(targetPost);
+            return true;
+        }
+    }
+
     public boolean updatePost(Post post){
         Optional<Post> existingPostOptional = postRepository.findById(post.getId());
         if(!existingPostOptional.isPresent()){
