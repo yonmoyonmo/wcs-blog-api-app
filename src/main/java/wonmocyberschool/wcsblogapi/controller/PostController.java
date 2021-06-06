@@ -34,10 +34,13 @@ public class PostController {
     public ResponseEntity<Response> createPost(HttpServletRequest request,
             @RequestBody Post post){
         Response response = new Response();
-
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
-        logger.info(email + " : at createPost");
+        if(post.getCategoryId() == null){
+            response.setMessage("category id 없음");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+        }
         if(postService.savePost(post, email)){
             response.setMessage("post added");
             response.setSuccess(true);

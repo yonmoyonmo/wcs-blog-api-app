@@ -14,6 +14,7 @@ import wonmocyberschool.wcsblogapi.util.JwtUtil;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@RequestMapping("/api")
 public class CommentController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
