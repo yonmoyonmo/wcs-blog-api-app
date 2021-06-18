@@ -1,5 +1,6 @@
 package wonmocyberschool.wcsblogapi.service;
 
+import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import wonmocyberschool.wcsblogapi.entity.BlogUser;
 import wonmocyberschool.wcsblogapi.entity.UserProfile;
 import wonmocyberschool.wcsblogapi.repository.BlogUserRepository;
 import wonmocyberschool.wcsblogapi.repository.UserProfileRepository;
+
+import java.util.Date;
 
 @Service
 @Transactional
@@ -33,6 +36,7 @@ public class BlogUserService {
         }
         if(!blogUserRepository.existsByNickname(nickname)) {
             user.setNickname(nickname);
+            user.setUpdatedTime(new Date());
         }else{
             return false;
         }
@@ -51,10 +55,11 @@ public class BlogUserService {
             logger.error("왜 유저가 없지? : "+ email);
             return false;
         }
-        userProfile.setOwner(user);
+        UserProfile profile = userProfileRepository.findByOwner(user);
+        profile.setProfileImageURL(userProfile.getProfileImageURL());
+        profile.setDescription(userProfile.getDescription());
         try{
-            userProfileRepository.save(userProfile);
-            blogUserRepository.save(user);
+            userProfileRepository.save(profile);
         }catch (Exception e){
             logger.error(e.getMessage()+" : profile update : "+e);
             return false;

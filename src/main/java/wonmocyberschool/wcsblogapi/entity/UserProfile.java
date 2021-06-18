@@ -14,7 +14,6 @@ public class UserProfile {
 
     //1:1 관계이지만 혹시 더 갖고 싶을까봐 다대일로 함
     //foreign key
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "blog_user_id")
     private BlogUser owner;
@@ -34,6 +33,7 @@ public class UserProfile {
             this.owner.getProfiles().remove(this);
         }
         this.owner = owner;
+        owner.getProfiles().clear();
         owner.getProfiles().add(this);
     }
 

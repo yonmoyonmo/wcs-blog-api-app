@@ -63,6 +63,7 @@ public class JwtInterceptor implements HandlerInterceptor {
                 return true;
             }
         }else{
+            logger.info(request.getHeader("Authorization"));
             logger.info("no token, 인터셉터가 처리했으니 안심하라구!");
             return false;
         }

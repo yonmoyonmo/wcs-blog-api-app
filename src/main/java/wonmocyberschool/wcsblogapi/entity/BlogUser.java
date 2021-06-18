@@ -22,6 +22,7 @@ public class BlogUser {
 
     private String username;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private List<UserProfile> profiles = new ArrayList<>();
 
