@@ -8,4 +8,5 @@ import wonmocyberschool.wcsblogapi.entity.BlogUser;
 public interface BlogUserRepository extends JpaRepository<BlogUser, Long> {
     BlogUser findByEmail(String email);
     boolean existsByEmail(String email);
+    boolean existsByNickname(String nickname);
 }

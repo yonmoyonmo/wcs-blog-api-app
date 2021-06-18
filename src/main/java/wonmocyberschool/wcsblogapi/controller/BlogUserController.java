@@ -47,6 +47,21 @@ public class BlogUserController {
         return new ResponseEntity<Response>(response, HttpStatus.OK);
     }
 
+    ///user/nickname/check?nickname=abc
+    @GetMapping("/user/nickname/check")
+    public ResponseEntity<Response> nicknameDubCheck(@RequestParam("nickname") String nickname){
+        Response response = new Response();
+        if(blogUserService.checkNickname(nickname)){
+            response.setSuccess(false);
+            response.setMessage("이미 존재하는 닉네임");
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }else{
+            response.setSuccess(true);
+            response.setMessage("사용할 수 있는 닉네임");
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+    }
+
     //유저 프로파일은 이메일 등록 시 생성되고 그 후로는 업데이트만 가능함.
     @PutMapping("/user/profile")
     public ResponseEntity<Response> updateBlogUserProfile(

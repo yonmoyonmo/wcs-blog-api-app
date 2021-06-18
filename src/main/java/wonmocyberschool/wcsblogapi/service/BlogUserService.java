@@ -31,7 +31,11 @@ public class BlogUserService {
             logger.error("왜 유저가 없지? : "+ email);
             return false;
         }
-        user.setNickname(nickname);
+        if(!blogUserRepository.existsByNickname(nickname)) {
+            user.setNickname(nickname);
+        }else{
+            return false;
+        }
         try {
             blogUserRepository.save(user);
         }catch (Exception e){
@@ -66,5 +70,9 @@ public class BlogUserService {
             return null;
         }
         return targetProfile;
+    }
+
+    public boolean checkNickname(String nickname) {
+        return blogUserRepository.existsByNickname(nickname);
     }
 }

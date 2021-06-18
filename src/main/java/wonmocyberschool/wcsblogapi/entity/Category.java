@@ -24,6 +24,7 @@ public class Category {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Post> posts = new ArrayList<>();
 
