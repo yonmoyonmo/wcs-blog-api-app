@@ -97,4 +97,22 @@ public class BlogUserController {
             return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
+
+
+    @GetMapping("/user/profile/{id}")
+    public ResponseEntity<Response> getUserProfileById(@PathVariable("id") Long profileId,
+                                                       HttpServletRequest request){
+        Response response = new Response();
+        UserProfile userProfile = blogUserService.getUserProfileById(profileId);
+        if(userProfile == null){
+            response.setSuccess(false);
+            response.setMessage("없는데여?");
+            return new ResponseEntity<Response>(response, HttpStatus.NOT_FOUND);
+        }else{
+            response.setMessage("ok");
+            response.setSuccess(true);
+            response.setData(userProfile);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+    }
 }

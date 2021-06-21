@@ -12,6 +12,7 @@ import wonmocyberschool.wcsblogapi.repository.BlogUserRepository;
 import wonmocyberschool.wcsblogapi.repository.UserProfileRepository;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -79,5 +80,15 @@ public class BlogUserService {
 
     public boolean checkNickname(String nickname) {
         return blogUserRepository.existsByNickname(nickname);
+    }
+
+    public UserProfile getUserProfileById(Long profileId) {
+        Optional<UserProfile> targetOptional = userProfileRepository.findById(profileId);
+        if(targetOptional.isPresent()){
+            return targetOptional.get();
+        }else {
+            logger.error("유저프로파일 아이디로 찾았을 때~~~ 없음 ㅎ ㅅㄱ ㅎ");
+            return null;
+        }
     }
 }
