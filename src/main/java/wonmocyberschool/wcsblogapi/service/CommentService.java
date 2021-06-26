@@ -82,7 +82,7 @@ public class CommentService {
             return false;
         }else{
             Comment targetComment = targetCommentOptional.get();
-            if(targetComment.getBlogUser().getEmail() != email){
+            if(!targetComment.getBlogUser().getEmail().equals(email)){
                 logger.error("email not matched with : "+email);
                 return false;
             }
