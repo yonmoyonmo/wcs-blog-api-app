@@ -95,7 +95,7 @@ public class PostService {
             //BlogUser user = blogUserRepository.findByEmail(email);
 
             //요청하신 분과 포스팅 주인님이 같은지 확인
-            if(targetPost.getBlogUser().getEmail() != email){
+            if(!targetPost.getBlogUser().getEmail().equals(email)){
                 logger.error("email : "+email+
                         "\nthis post's user email : "
                         +targetPost.getBlogUser().getEmail());
@@ -120,7 +120,7 @@ public class PostService {
             Post existingPost = existingPostOptional.get();
 
             //요청하신 분과 포스팅 주인님이 같은지 확인
-            if(existingPost.getBlogUser().getEmail() != email){
+            if(!existingPost.getBlogUser().getEmail().equals(email)){
                 logger.error("email : "+email+
                         "\nthis post's user email : "
                         +existingPost.getBlogUser().getEmail());
@@ -212,6 +212,7 @@ public class PostService {
         logger.info("tags are saved");
         return true;
     }
+
     private boolean saveImages(List<String> imageUrlList, Post post){
         try{
             for(String imageUrl : imageUrlList){
