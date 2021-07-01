@@ -113,6 +113,20 @@ public class AdminController {
         }
     }
 
+    @DeleteMapping("/notification")
+    public ResponseEntity<Response> deleteNotification(@RequestBody Notification notification){
+        Response response = new Response();
+        if(adminService.deleteNotification(notification)) {
+            response.setMessage("notification deleted");
+            response.setSuccess(true);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }else{
+            response.setMessage("시발");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/public/notification/list")
     public ResponseEntity<Response> getNotificationList(){
         Response response = new Response();
@@ -150,7 +164,8 @@ public class AdminController {
     }
 
     @PutMapping("/category")
-    public ResponseEntity<Response> updateCategory(@RequestBody Category category){
+    public ResponseEntity<Response> updateCategory(HttpServletRequest request,
+            @RequestBody Category category){
         Response response = new Response();
         if(adminService.updateCategory(category)) {
             response.setMessage("category updated");
@@ -158,6 +173,19 @@ public class AdminController {
             return new ResponseEntity<Response>(response, HttpStatus.OK);
         }else{
             response.setMessage("something went wrong check something me in the future");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping("/category")
+    public ResponseEntity<Response> deleteCategory(@RequestBody Category category){
+        Response response = new Response();
+        if(adminService.deleteCategory(category)) {
+            response.setMessage("category deleted");
+            response.setSuccess(true);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }else{
+            response.setMessage("조땜");
             response.setSuccess(false);
             return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -178,5 +206,7 @@ public class AdminController {
             return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
     }
+
+
 
 }

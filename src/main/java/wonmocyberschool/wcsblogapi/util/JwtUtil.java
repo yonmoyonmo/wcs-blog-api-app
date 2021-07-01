@@ -36,6 +36,7 @@ public class JwtUtil {
 
         Claims claim = Jwts.claims();
         claim.put("email", admin.getAdminEmail());
+        claim.put("username", admin.getUsername());
 
         return Jwts.builder()
                 .setClaims(claim)

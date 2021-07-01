@@ -94,6 +94,17 @@ public class AdminService {
         }
     }
 
+    public boolean deleteCategory(Category category){
+        Optional<Category> categoryOptional = categoryRepository.findById(category.getId());
+        if(categoryOptional.isPresent()){
+            categoryRepository.deleteById(category.getId());
+            return true;
+        }else{
+            logger.error("not matched category, given category id : "+ category.getId().toString());
+            return false;
+        }
+    }
+
     public List<Category> readCategoryList(){
         List<Category> categories = new ArrayList<>();
         try {
@@ -125,6 +136,17 @@ public class AdminService {
             notificationOptional.get().setTitle(notification.getTitle());
             notificationOptional.get().setText(notification.getText());
             notificationRepository.save(notificationOptional.get());
+            return true;
+        }else{
+            logger.error("not matched notification, given notification id : "+ notification.getId().toString());
+            return false;
+        }
+    }
+
+    public boolean deleteNotification(Notification notification){
+        Optional<Notification> notificationOptional = notificationRepository.findById(notification.getId());
+        if(notificationOptional.isPresent()){
+            notificationRepository.deleteById(notification.getId());
             return true;
         }else{
             logger.error("not matched notification, given notification id : "+ notification.getId().toString());
