@@ -51,7 +51,12 @@ public class AdminController {
     @PostMapping("/wonmo")
     public ResponseEntity<Response> addAdmin(@RequestBody Wonmo wonmo){
         Response response = new Response();
-        if(wonmo.getWonmoPromise() == this.wonmoPromise) {
+        if(wonmo.getWonmoPromise() == null){
+            response.setMessage("넌 못들어 간다.");
+            response.setSuccess(false);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+        if(!wonmo.getWonmoPromise().equals(this.wonmoPromise)) {
             response.setMessage("넌 못들어 간다.");
             response.setSuccess(false);
             return new ResponseEntity<Response>(response, HttpStatus.OK);

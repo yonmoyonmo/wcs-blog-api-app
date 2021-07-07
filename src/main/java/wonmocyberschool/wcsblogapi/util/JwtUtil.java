@@ -8,11 +8,9 @@ import wonmocyberschool.wcsblogapi.config.JwtProperties;
 import wonmocyberschool.wcsblogapi.entity.Admin;
 import wonmocyberschool.wcsblogapi.entity.BlogUser;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+
 
 import static java.lang.Integer.parseInt;
 
@@ -91,8 +89,6 @@ public class JwtUtil {
             Claims claims = Jwts.parser().setSigningKey(jwtProperties.getSecretKey()).parseClaimsJws(authToken).getBody();
             logger.info(claims.get("email").toString());
             return true;
-        } catch (SignatureException ex) {
-            logger.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
             logger.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
@@ -101,6 +97,8 @@ public class JwtUtil {
             logger.error("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
             logger.error("JWT claims string is empty.");
+        } catch(Exception e){
+            logger.error(e.getMessage());
         }
         return false;
     }

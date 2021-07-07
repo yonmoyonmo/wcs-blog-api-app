@@ -30,6 +30,9 @@ public class AdminInterceptor implements HandlerInterceptor {
             logger.info("token : " + token);
             if(!jwtUtil.validateToken(token)){
                 logger.info("token invalid");
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"success\":false,\"message\":\"token invalid\"}");
                 return false;
             }else{
                 String tokenEmail = jwtUtil.getUserEmailFromToken(token);
