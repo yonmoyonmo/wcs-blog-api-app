@@ -40,6 +40,9 @@ public class AdminInterceptor implements HandlerInterceptor {
             }
         }else{
             logger.info("no token, 인터셉터가 처리했으니 안심하라구!");
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"success\":false,\"message\":\"token invalid\"}");
             return false;
         }
     }
