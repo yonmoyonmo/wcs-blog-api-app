@@ -68,6 +68,9 @@ public class JwtInterceptor implements HandlerInterceptor {
         }else{
             logger.info(request.getHeader("Authorization"));
             logger.info("no token, 인터셉터가 처리했으니 안심하라구!");
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"success\":false,\"message\":\"no token\"}");
             return false;
         }
     }
