@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import wonmocyberschool.wcsblogapi.entity.Comment;
 import wonmocyberschool.wcsblogapi.payload.Response;
@@ -32,7 +33,12 @@ public class CommentController {
     public ResponseEntity<Response> addCommentToPost(HttpServletRequest request,
             @RequestBody Comment comment){
 
-        logger.info("creating comment... "+ request.getRemoteAddr());
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getHeader("Proxy-Client-IP");
+        }
+
+        logger.info("creating comment... "+ clientIp);
 
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
@@ -54,7 +60,11 @@ public class CommentController {
     public ResponseEntity<Response> updateComment(HttpServletRequest request,
             @RequestBody Comment comment){
 
-        logger.info("updating comment... "+ request.getRemoteAddr());
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getHeader("Proxy-Client-IP");
+        }
+        logger.info("updating comment... "+ clientIp);
 
         Response response = new Response();
         if(comment.getId()==null){
@@ -80,7 +90,12 @@ public class CommentController {
     public ResponseEntity<Response> deleteComment(HttpServletRequest request,
                                                   @RequestBody Comment comment){
 
-        logger.info("deleting comment... "+ request.getRemoteAddr());
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getHeader("Proxy-Client-IP");
+        }
+
+        logger.info("deleting comment... "+ clientIp);
 
         Response response = new Response();
         if(comment.getId()==null){
