@@ -41,12 +41,6 @@ public class AdminController {
         this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping("/test/oauth")
-    public String testOauth(@RequestParam("token") String token){
-        System.out.println("token : " +token);
-        return "탁탁탁탁탁";
-    }
-
     //-------------------------wonmo-------------------
     @PostMapping("/wonmo")
     public ResponseEntity<Response> addAdmin(@RequestBody Wonmo wonmo){
@@ -186,6 +180,7 @@ public class AdminController {
     public ResponseEntity<Response> deleteCategory(@RequestBody Category category){
         Response response = new Response();
         if(adminService.deleteCategory(category)) {
+            logger.info("category deleted : "+category.getTitle());
             response.setMessage("category deleted");
             response.setSuccess(true);
             return new ResponseEntity<Response>(response, HttpStatus.OK);
@@ -197,7 +192,8 @@ public class AdminController {
     }
 
     @GetMapping("/public/category/list")
-    public ResponseEntity<Response> getCategoryList(){
+    public ResponseEntity<Response> getCategoryList(HttpServletRequest request){
+        logger.info("/public/category/list" + request.getRemoteAddr());
         Response response = new Response();
         List<Category> categories = adminService.readCategoryList();
         if(categories.isEmpty()){

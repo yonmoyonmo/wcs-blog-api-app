@@ -28,9 +28,6 @@ public class BlogUserController {
         this.jwtUtil = jwtUtil;
     }
 
-    //로그인 후에 글 쓸라 하는데 닉네임이 없으면 닉네임 만들라고 함.
-    //사진 저장할 때 닉네임으로 구별할거임
-    //특수문자 안댐(나중에 발리데이션 구현할 때 처리할꼬임)
     @PostMapping("/user/nickname")
     public ResponseEntity<Response> setBlogUserNickname (HttpServletRequest request,
                                                          @RequestBody String nickname){
@@ -38,6 +35,7 @@ public class BlogUserController {
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
         if(blogUserService.setBlogUserNickname(email, nickname)){
+            logger.info(nickname + " new nickname");
             response.setSuccess(true);
             response.setMessage("new nickname has been set");
         }else{
@@ -51,7 +49,7 @@ public class BlogUserController {
     @GetMapping("/user/nickname/check")
     public ResponseEntity<Response> nicknameDubCheck(@RequestParam("nickname") String nickname, HttpServletRequest request){
         Response response = new Response();
-        logger.info("checking");
+        logger.info("checking nickname");
         if(blogUserService.checkNickname(nickname)){
             response.setSuccess(false);
             response.setMessage("이미 존재하는 닉네임");
@@ -72,6 +70,7 @@ public class BlogUserController {
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
         if(blogUserService.updateBlogUserProfile(email, userProfile)){
+            logger.info("user profile set : " + userProfile.getOwner().getEmail());
             response.setSuccess(true);
             response.setMessage("new profile has been set");
         }else{
@@ -91,6 +90,7 @@ public class BlogUserController {
             response.setMessage("없는데여?");
             return new ResponseEntity<Response>(response, HttpStatus.NOT_FOUND);
         }else{
+            logger.info("/user/profile : "+ email);
             response.setMessage("ok");
             response.setSuccess(true);
             response.setData(userProfile);
@@ -109,6 +109,7 @@ public class BlogUserController {
             response.setMessage("없는데여?");
             return new ResponseEntity<Response>(response, HttpStatus.NOT_FOUND);
         }else{
+            logger.info("/user/profile/{id} : " + profileId);
             response.setMessage("ok");
             response.setSuccess(true);
             response.setData(userProfile);

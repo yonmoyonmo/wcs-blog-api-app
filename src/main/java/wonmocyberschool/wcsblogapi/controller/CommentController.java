@@ -27,10 +27,12 @@ public class CommentController {
         this.jwtUtil = jwtUtil;
     }
 
-    //테스트 안해봄
+
     @PostMapping("/comment")
     public ResponseEntity<Response> addCommentToPost(HttpServletRequest request,
             @RequestBody Comment comment){
+
+        logger.info("creating comment... "+ request.getRemoteAddr());
 
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
@@ -42,6 +44,7 @@ public class CommentController {
             response.setMessage("댓글 달기 실패!");
             return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }else{
+            logger.info("creating comment success : "+ request.getRemoteAddr());
             response.setSuccess(true);
             response.setMessage("댓글 달기 성공!");
             return new ResponseEntity<Response>(response, HttpStatus.OK);
@@ -50,6 +53,8 @@ public class CommentController {
     @PutMapping("/comment")
     public ResponseEntity<Response> updateComment(HttpServletRequest request,
             @RequestBody Comment comment){
+
+        logger.info("updating comment... "+ request.getRemoteAddr());
 
         Response response = new Response();
         if(comment.getId()==null){
@@ -64,6 +69,7 @@ public class CommentController {
             response.setMessage("comment update failed");
             return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }else{
+            logger.info("updating comment success : "+ request.getRemoteAddr());
             response.setSuccess(true);
             response.setMessage("comment update success");
             return new ResponseEntity<Response>(response, HttpStatus.OK);
@@ -73,6 +79,8 @@ public class CommentController {
     @DeleteMapping("/comment")
     public ResponseEntity<Response> deleteComment(HttpServletRequest request,
                                                   @RequestBody Comment comment){
+
+        logger.info("deleting comment... "+ request.getRemoteAddr());
 
         Response response = new Response();
         if(comment.getId()==null){
@@ -87,6 +95,7 @@ public class CommentController {
             response.setSuccess(false);
             return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }else{
+            logger.info("deleting comment success "+ request.getRemoteAddr());
             response.setMessage("comment delete success");
             response.setSuccess(true);
             return new ResponseEntity<Response>(response, HttpStatus.OK);

@@ -33,10 +33,14 @@ public class PostController {
     @PostMapping("/post")
     public ResponseEntity<Response> createPost(HttpServletRequest request,
             @RequestBody Post post){
+
+        logger.info("at : /post : POST");
+
         Response response = new Response();
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
         if(post.getCategoryId() == null){
+            logger.info("category id 없음");
             response.setMessage("category id 없음");
             response.setSuccess(false);
             return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
@@ -52,11 +56,11 @@ public class PostController {
         }
     }
 
-    //제목, 이미지, 태그, 내용만 수정 가능함, 카테고리 수정 불가능.
-    //왜? 내맘. 꼬우면 삭제하고 다시써~
     @PutMapping("/post")
     public ResponseEntity<Response> updatePost(HttpServletRequest request,
                                                @RequestBody Post post){
+        logger.info("at : /post : PUT");
+
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
 
@@ -82,6 +86,8 @@ public class PostController {
     @DeleteMapping("/post")
     public ResponseEntity<Response> deletePost(HttpServletRequest request,
                                                @RequestBody Post post){
+        logger.info("at : /post : DELETE");
+
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
 
@@ -105,7 +111,10 @@ public class PostController {
 
     @GetMapping("/public/post/category/{categoryId}")
     public ResponseEntity<Response> getPostsByCategory(@PathVariable("categoryId") Long categoryId){
+        logger.info("at : /public/post/category/{categoryId} : GET");
+
         Response response = new Response();
+
         List<Post> posts = postService.getPostsByCategory(categoryId);
         if(posts.isEmpty()){
             response.setMessage("this category has no post");
@@ -125,7 +134,10 @@ public class PostController {
 
     @GetMapping("/public/post/{id}")
     public ResponseEntity<Response> getOnePost(@PathVariable("id") Long postId){
+        logger.info("at : /public/post/{id} : GET");
+
         Response response = new Response();
+
         Optional<Post> postOptional = postService.getPostById(postId);
         if(postOptional.isPresent()){
             response.setMessage("OK");
@@ -146,6 +158,9 @@ public class PostController {
     @GetMapping("/public/post/tag/{tagId}")
     public ResponseEntity<Response> getPostsByTagId(
             @PathVariable("tagId") Long tagId){
+
+        logger.info("at : /public/post/tag/{tagId} : GET");
+
         Response response = new Response();
         List<Post> posts = postService.getPostsByTagId(tagId);
         if(posts.isEmpty()){
