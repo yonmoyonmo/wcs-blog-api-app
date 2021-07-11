@@ -50,7 +50,7 @@ public class CommentController {
             response.setMessage("댓글 달기 실패!");
             return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }else{
-            logger.info("creating comment success : "+ request.getRemoteAddr());
+            logger.info("creating comment success : "+ clientIp);
             response.setSuccess(true);
             response.setMessage("댓글 달기 성공!");
             return new ResponseEntity<Response>(response, HttpStatus.OK);
@@ -79,7 +79,7 @@ public class CommentController {
             response.setMessage("comment update failed");
             return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }else{
-            logger.info("updating comment success : "+ request.getRemoteAddr());
+            logger.info("updating comment success : "+ clientIp);
             response.setSuccess(true);
             response.setMessage("comment update success");
             return new ResponseEntity<Response>(response, HttpStatus.OK);
@@ -110,7 +110,7 @@ public class CommentController {
             response.setSuccess(false);
             return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }else{
-            logger.info("deleting comment success "+ request.getRemoteAddr());
+            logger.info("deleting comment success "+ clientIp);
             response.setMessage("comment delete success");
             response.setSuccess(true);
             return new ResponseEntity<Response>(response, HttpStatus.OK);

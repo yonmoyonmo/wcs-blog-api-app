@@ -193,7 +193,11 @@ public class AdminController {
 
     @GetMapping("/public/category/list")
     public ResponseEntity<Response> getCategoryList(HttpServletRequest request){
-        logger.info("/public/category/list" + request.getRemoteAddr());
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getHeader("Proxy-Client-IP");
+        }
+        logger.info("/public/category/list" + clientIp);
         Response response = new Response();
         List<Category> categories = adminService.readCategoryList();
         if(categories.isEmpty()){
