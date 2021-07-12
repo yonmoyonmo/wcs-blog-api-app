@@ -70,7 +70,6 @@ public class BlogUserController {
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);
         if(blogUserService.updateBlogUserProfile(email, userProfile)){
-            logger.info("user profile set : " + userProfile.getOwner().getEmail());
             response.setSuccess(true);
             response.setMessage("new profile has been set");
         }else{
@@ -98,7 +97,7 @@ public class BlogUserController {
         }
     }
 
-
+    //나중에 쓰기
     @GetMapping("/user/profile/{id}")
     public ResponseEntity<Response> getUserProfileById(@PathVariable("id") Long profileId,
                                                        HttpServletRequest request){
