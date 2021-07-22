@@ -16,11 +16,7 @@ import wonmocyberschool.wcsblogapi.service.AdminService;
 import wonmocyberschool.wcsblogapi.util.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")
@@ -193,11 +189,14 @@ public class AdminController {
 
     @GetMapping("/public/category/list")
     public ResponseEntity<Response> getCategoryList(HttpServletRequest request){
+
         String clientIp = request.getHeader("X-Forwarded-For");
         if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
             clientIp = request.getHeader("Proxy-Client-IP");
         }
-        logger.info("/public/category/list" + clientIp);
+
+        logger.info("/public/category/list : " + clientIp);
+
         Response response = new Response();
         List<Category> categories = adminService.readCategoryList();
         if(categories.isEmpty()){

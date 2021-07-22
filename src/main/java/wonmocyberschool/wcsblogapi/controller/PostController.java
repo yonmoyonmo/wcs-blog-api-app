@@ -35,6 +35,12 @@ public class PostController {
             @RequestBody Post post){
 
         logger.info("at : /post : POST");
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getHeader("Proxy-Client-IP");
+        }
+
+        logger.info("creating post... "+ clientIp);
 
         Response response = new Response();
         String token = request.getHeader("Authorization");
@@ -60,6 +66,13 @@ public class PostController {
     public ResponseEntity<Response> updatePost(HttpServletRequest request,
                                                @RequestBody Post post){
         logger.info("at : /post : PUT");
+
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getHeader("Proxy-Client-IP");
+        }
+
+        logger.info("creating post... "+ clientIp);
 
         String token = request.getHeader("Authorization");
         String email = jwtUtil.getUserEmailFromToken(token);

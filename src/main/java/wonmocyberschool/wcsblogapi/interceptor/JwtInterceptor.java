@@ -45,6 +45,12 @@ public class JwtInterceptor implements HandlerInterceptor {
                 String tokenEmail = jwtUtil.getUserEmailFromToken(token);
                 if(blogUserRepository.existsByEmail(tokenEmail)){
                     logger.info("logged in : " + tokenEmail);
+                    String clientIp = request.getHeader("X-Forwarded-For");
+                    if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
+                        clientIp = request.getHeader("Proxy-Client-IP");
+                    }
+                    logger.info("IP : "+ clientIp);
+
                 }else{
                     String username = jwtUtil.getUsernameFromToken(token);
 
@@ -62,12 +68,24 @@ public class JwtInterceptor implements HandlerInterceptor {
 
 
                     logger.info("new user has been registered : " + tokenEmail);
+                    String clientIp = request.getHeader("X-Forwarded-For");
+                    if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
+                        clientIp = request.getHeader("Proxy-Client-IP");
+                    }
+                    logger.info("IP : "+ clientIp);
                 }
                 return true;
             }
         }else{
             logger.info(request.getHeader("Authorization"));
             logger.info("no token, 인터셉터가 처리했으니 안심하라구!");
+
+            String clientIp = request.getHeader("X-Forwarded-For");
+            if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
+                clientIp = request.getHeader("Proxy-Client-IP");
+            }
+            logger.info("IP : "+ clientIp);
+
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write("{\"success\":false,\"message\":\"no token\"}");
