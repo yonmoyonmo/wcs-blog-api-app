@@ -3,6 +3,9 @@ package wonmocyberschool.wcsblogapi.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wonmocyberschool.wcsblogapi.entity.*;
@@ -40,11 +43,12 @@ public class PostService {
         this.postTagRepository = postTagRepository;
     }
 
-    public List<Post> getPostsByCategory(Long categoryId){
+    public Page<Post> getPostsByCategory(Long categoryId, int page){
         Optional<Category> category = categoryRepository.findById(categoryId);
+        PageRequest pageRequest = PageRequest.of(page, 12, Sort.by("id").descending());
         if(category.isPresent()) {
             try {
-                return postRepository.findAllByCategory(category.get());
+                return postRepository.findAllByCategory(category.get(), pageRequest);
             } catch (Exception e) {
                 logger.error(e.getMessage() + " : getPostsByCate : "+e);
                 return null;

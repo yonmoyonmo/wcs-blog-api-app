@@ -3,6 +3,7 @@ package wonmocyberschool.wcsblogapi.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -123,12 +124,13 @@ public class PostController {
     }
 
     @GetMapping("/public/post/category/{categoryId}")
-    public ResponseEntity<Response> getPostsByCategory(@PathVariable("categoryId") Long categoryId){
+    public ResponseEntity<Response> getPostsByCategory(@PathVariable("categoryId") Long categoryId,
+                                                       @RequestParam int page){
         logger.info("at : /public/post/category/{categoryId} : GET");
 
         Response response = new Response();
 
-        List<Post> posts = postService.getPostsByCategory(categoryId);
+        Page<Post> posts = postService.getPostsByCategory(categoryId, page);
         if(posts.isEmpty()){
             response.setMessage("this category has no post");
             response.setSuccess(false);
