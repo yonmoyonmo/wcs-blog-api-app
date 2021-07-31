@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wonmocyberschool.wcsblogapi.entity.BlogUser;
 import wonmocyberschool.wcsblogapi.entity.UserProfile;
+import wonmocyberschool.wcsblogapi.payload.ProfileView;
 import wonmocyberschool.wcsblogapi.repository.BlogUserRepository;
 import wonmocyberschool.wcsblogapi.repository.UserProfileRepository;
 
@@ -82,13 +83,21 @@ public class BlogUserService {
         return blogUserRepository.existsByNickname(nickname);
     }
 
-    public UserProfile getUserProfileById(Long profileId) {
-        Optional<UserProfile> targetOptional = userProfileRepository.findById(profileId);
-        if(targetOptional.isPresent()){
-            return targetOptional.get();
-        }else {
-            logger.error("유저프로파일 아이디로 찾았을 때~~~ 없음 ㅎ ㅅㄱ ㅎ");
+    public ProfileView getUserProfileByNickName(String nickname) {
+        ProfileView profileView = new ProfileView();
+
+        BlogUser blogUser = blogUserRepository.findByNickname(nickname);
+        if(blogUser == null){
+            logger.error("no user with "+ nickname);
             return null;
         }
+        UserProfile userProfile = userProfileRepository.findByOwner(blogUser);
+        if(userProfile == null){
+            logger.error("no profile with "+nickname);
+            return null;
+        }
+        profileView.setBlogUser(blogUser);
+        profileView.setUserProfile(userProfile);
+        return profileView;
     }
 }

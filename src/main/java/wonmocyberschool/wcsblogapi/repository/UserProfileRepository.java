@@ -7,5 +7,5 @@ import wonmocyberschool.wcsblogapi.entity.UserProfile;
 
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
-    UserProfile findByOwner(BlogUser user);
+    UserProfile findByOwner(BlogUser owner);
 }

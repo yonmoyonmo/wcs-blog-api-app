@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import wonmocyberschool.wcsblogapi.entity.UserProfile;
+import wonmocyberschool.wcsblogapi.payload.ProfileView;
 import wonmocyberschool.wcsblogapi.payload.Response;
+import wonmocyberschool.wcsblogapi.repository.UserProfileRepository;
 import wonmocyberschool.wcsblogapi.service.BlogUserService;
 import wonmocyberschool.wcsblogapi.util.JwtUtil;
 
@@ -97,18 +99,29 @@ public class BlogUserController {
         }
     }
 
-    //나중에 쓰기
-    @GetMapping("/user/profile/{id}")
-    public ResponseEntity<Response> getUserProfileById(@PathVariable("id") Long profileId,
+    //닉네임으로 유저의 프로파일 열람해 보기
+    @GetMapping("/public/user/profile")
+    public ResponseEntity<Response> getUserProfileById(@RequestParam("nickname") String nickname,
                                                        HttpServletRequest request){
         Response response = new Response();
-        UserProfile userProfile = blogUserService.getUserProfileById(profileId);
+
+        ProfileView userProfile = new ProfileView();
+
+        userProfile = blogUserService.getUserProfileByNickName(nickname);
+
+
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getHeader("Proxy-Client-IP");
+        }
+        logger.info(clientIp+" someone read this profile : "+ nickname);
+
         if(userProfile == null){
             response.setSuccess(false);
             response.setMessage("없는데여?");
             return new ResponseEntity<Response>(response, HttpStatus.NOT_FOUND);
         }else{
-            logger.info("/user/profile/{id} : " + profileId);
+            logger.info("/public/user/profile : " + nickname);
             response.setMessage("ok");
             response.setSuccess(true);
             response.setData(userProfile);

@@ -1,8 +1,5 @@
 package wonmocyberschool.wcsblogapi.payload;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class Response {
     private String message;
     private Boolean success;
